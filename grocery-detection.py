@@ -6,7 +6,7 @@ from ultralytics import YOLO
 import streamlit as st
 
 # Load the YOLO model
-MODEL_PATH = '/home/senku/object-expiry-date-detection/best.pt'
+MODEL_PATH = 'best.pt'
 if not os.path.exists(MODEL_PATH):
     st.error("Model file not found. Please ensure 'best.pt' is in the working directory.")
     st.stop()
