@@ -1,0 +1,83 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Header */
+header {
+    display: flex;
+    align-items: center;
+    background-color: #2874f0;
+    color: white;
+    padding: 10px 20px;
+    position: relative; /* Allows absolute positioning for the heading */
+}
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Reduced spacing between the logos */
+}
+.logo {
+    width: 80px; /* Ensures both logos are the same size */
+    height: auto;
+}
+header h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    margin: 0;
+    text-align: center;
+}
+
+/* Navigation Bar */
+nav {
+    background-color: #333;
+    padding: 0; /* Remove extra padding */
+}
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Add spacing between navigation items */
+}
+nav ul li {
+    margin: 0; /* Minimize spacing within list items */
+}
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    padding: 10px 15px; /* Adjust padding for a cleaner look */
+    display: block;
+    border-radius: 4px; /* Slightly round the edges */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+nav ul li a:hover {
+    background-color: #575757;
+}
+
+/* Main Content */
+main {
+    padding: 20px;
+}
+section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+h2 {
+    color: #333;
+}
