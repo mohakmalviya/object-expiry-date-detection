@@ -3,25 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flipkart Grid 6.0 Robotics Challenge</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Live Camera Feed</title>
 </head>
 <body>
-    <!-- Header Section -->
-    <header>
-        <div class="header-content">
-            <img src="flipkart-logo.png" alt="Flipkart Logo" class="logo">
-            <img src="grid-logo.png" alt="Grid 6.0 Logo" class="logo">
-        </div>
-        <h1>FLIPKART GRID 6.0 ROBOTICS CHALLENGE</h1>
-    </header>
-
-    <!-- Navigation Bar -->
     <nav>
         <ul>
             <li><a href="brand_detection.html">Brand Detection</a></li>
             <li><a href="item_counting.html">Item Counting</a></li>
-            <li><a href="expiry_date.html">Expiry Date Detection</a></li>
+            <li><a href="expiry_detection.html">Expiry Date Detection</a></li>
             <li><a href="freshness.html">Freshness Detection</a></li>
         </ul>
     </nav>
@@ -31,6 +20,10 @@
         <section>
             <h2>Welcome!</h2>
             <p>Click on the navigation bar items to explore individual features.</p>
+        </section>
+        <section>
+            <h2>Live Camera Feed</h2>
+            <img src="{{ url_for('video_feed') }}" width="640" height="480">
         </section>
     </main>
 </body>
