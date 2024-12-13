@@ -3,14 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Camera Feed</title>
+    <title>Flipkart Grid 6.0 Robotics Challenge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 20px;
+        }
+        video, img {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
+    <!-- Header Section -->
+    <header>
+        <div class="header-content">
+            <img src="{{ url_for('static', filename='assets/flipkart-logo.png') }}" alt="Flipkart Logo" class="logo">
+            <img src="{{ url_for('static', filename='assets/grid-logo.png') }}" alt="Grid 6.0 Logo" class="logo">
+        </div>
+        <h1>FLIPKART GRID 6.0 ROBOTICS CHALLENGE</h1>
+    </header>
+
+    <!-- Navigation Bar -->
     <nav>
         <ul>
-            <li><a href="brand_detection.html">Brand Detection</a></li>
-            <li><a href="item_counting.html">Item Counting</a></li>
-            <li><a href="expiry_detection.html">Expiry Date Detection</a></li>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('expiry_detection') }}">Expiry Date Detection</a></li>
             <li><a href="freshness.html">Freshness Detection</a></li>
         </ul>
     </nav>
@@ -18,13 +40,66 @@
     <!-- Main Content -->
     <main>
         <section>
-            <h2>Welcome!</h2>
-            <p>Click on the navigation bar items to explore individual features.</p>
-        </section>
-        <section>
-            <h2>Live Camera Feed</h2>
-            <img src="{{ url_for('video_feed') }}" width="640" height="480">
+            <h2>Live Camera Feed - Item Counting</h2>
+            <div class="container">
+                <!-- Webcam Video -->
+                <video id="webcam" autoplay width="320" height="240"></video>
+
+                <!-- Annotated Frame Display -->
+                <img id="annotated-frame" alt="Annotated Frame" width="320" height="240">
+            </div>
+
+            <!-- Display Maximum Items Detected -->
+            <h3>Maximum Items Detected: <span id="max-item-count">No data</span></h3>
         </section>
     </main>
+
+    <!-- JavaScript for Webcam Access and Frame Capture -->
+    <script>
+        const video = document.getElementById('webcam');
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const annotatedFrameImg = document.getElementById('annotated-frame');
+
+        // Access webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            });
+
+        // Capture frame and send it to the server for processing
+        function captureFrame() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const frameData = canvas.toDataURL('image/jpeg');
+
+            fetch('/process_item_count', {
+                method: 'POST',
+                body: JSON.stringify({ image: frameData }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the current detected items count and display it
+                document.getElementById('max-item-count').innerText =
+                    data.item_count || "No data";
+                
+                // Display the annotated frame
+                annotatedFrameImg.src = `data:image/jpeg;base64,${data.annotated_frame}`;
+                
+                // Fetch and update the max item count from server (if stored separately)
+                fetch('/max_item_count')
+                    .then(response => response.json())
+                    .then(maxData => {
+                        document.getElementById('max-item-count').innerText =
+                            maxData.max_item_count || "No data";
+                    });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        setInterval(captureFrame, 1000); // Send frames every second
+    </script>
 </body>
 </html>

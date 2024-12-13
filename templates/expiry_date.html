@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expiry Date Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <!-- Header Section -->
+  <header>
+      <div class="header-content">
+          <img src="{{ url_for('static', filename='assets/flipkart-logo.png') }}" alt="Flipkart Logo" class="logo">
+          <img src="{{ url_for('static', filename='assets/grid-logo.png') }}" alt="Grid 6.0 Logo" class="logo">
+      </div>
+      <h1>FLIPKART GRID 6.0 ROBOTICS CHALLENGE</h1>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav>
+      <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('expiry_detection') }}">Expiry Date Detection</a></li>
+          <li><a href="freshness.html">Freshness Detection</a></li>
+      </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <section class="camera-section">
+      <h2>Live Camera Feed - Expiry Date Detection</h2>
+
+      <!-- Webcam Video -->
+      <video id="webcam" autoplay width="320" height="240"></video>
+
+      <!-- Annotated Frame Display -->
+      <img id="annotated-frame" alt="Annotated Frame" width="320" height="240">
+
+      <!-- Display Results -->
+      <div class="results">
+          <p>Expiry Date: <span id="expiry-date">No data</span></p>
+          <p>Days Remaining: <span id="days-remaining">No data</span></p>
+      </div>
+
+      <!-- JavaScript for Webcam Access and Frame Capture -->
+      <script>
+          const video = document.getElementById('webcam');
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          const annotatedFrameImg = document.getElementById('annotated-frame');
+
+          // Access webcam
+          navigator.mediaDevices.getUserMedia({ video: true })
+              .then(stream => {
+                  video.srcObject = stream;
+              });
+
+          // Capture frame and send it to the server for processing
+          function captureFrame() {
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              context.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const frameData = canvas.toDataURL('image/jpeg');
+
+              fetch('/process_expiry_date', {
+                  method: 'POST',
+                  body: JSON.stringify({ image: frameData }),
+                  headers: { 'Content-Type': 'application/json' }
+              })
+              .then(response => response.json())
+              .then(data => {
+                  document.getElementById('expiry-date').innerText = data.expiry_date || "No data";
+                  document.getElementById('days-remaining').innerText = data.days_remaining || "No data";
+                  annotatedFrameImg.src = `data:image/jpeg;base64,${data.annotated_frame}`;
+              });
+          }
+
+          setInterval(captureFrame, 1000); // Send frames every second
+       </script>
+
+   </section>
+
+   <!-- Footer Section -->
+   <footer>
+       <p>&copy; 2024 Flipkart Grid 6.0 Robotics Challenge</p>
+   </footer>
+
+</body>
+</html>
