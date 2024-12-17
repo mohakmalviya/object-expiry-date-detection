@@ -6,11 +6,6 @@ import os
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from ultralytics import YOLO
-
-# Load YOLO model
-MODEL_PATH = 'best_model.pt'
-model = YOLO(MODEL_PATH)
 
 # Initialize EasyOCR reader
 reader = easyocr.Reader(['en'], gpu=False)
@@ -52,15 +47,11 @@ def preprocess_frame(frame):
 def process_uploaded_image(image, image_id):
     days_remaining = "No data"  # Initialize days_remaining to a default value
 
-    # Perform object detection with YOLO
-    results = model.predict(source=image, conf=0.5, save=False)
-    annotated_frame = results[0].plot()
-
     # Process frame for OCR
     processed_frame = preprocess_frame(image)
     result = reader.readtext(processed_frame)
 
-    display_frame = annotated_frame.copy()
+    display_frame = image.copy()
     detected_expiry_date = None
 
     # Store detected texts with positions
