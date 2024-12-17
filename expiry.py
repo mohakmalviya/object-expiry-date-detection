@@ -73,7 +73,7 @@ def process_uploaded_image(image, image_id):
     # Look for expiry keyword and associated date
     for idx, item in enumerate(detected_texts):
         text = item['text']
-        if re.search(r'\b(expiry|exp|expires)\b', text, re.IGNORECASE):
+        if re.search(r'\b(expiry|exp|EXP|Exp|expires)\b', text, re.IGNORECASE):
             # Check next text items for date
             for next_item in detected_texts[idx+1:]:
                 date_match = re.search(date_pattern, next_item['text'])
